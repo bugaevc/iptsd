@@ -1,9 +1,8 @@
-%global debug_package %{nil}
-%global toolchain gcc
+%global optflags -O3 -g
 
 Name: iptsd
 Version: 2
-Release: 1%{?dist}
+Release: 1.mine%{?dist}
 Summary: Userspace daemon for Intel Precise Touch & Stylus
 License: GPLv2+
 
@@ -11,12 +10,7 @@ URL: https://github.com/linux-surface/iptsd
 Source: {{{ create_tarball }}}
 
 BuildRequires: meson
-
-%if "%{toolchain}" == "gcc"
 BuildRequires: gcc-g++
-%else
-BuildRequires: clang
-%endif
 
 # Some of our dependencies can only be resolved with cmake
 BuildRequires: cmake
@@ -45,10 +39,8 @@ kernel driver, and sends them back to the kernel using uinput devices.
 %autosetup
 
 %build
-# Give us all the O's
-%global optflags %(echo %{optflags} | sed 's|-O2||g' | sed 's|-mtune=generic||g')
 
-%meson --buildtype=release --debug
+%meson
 %meson_build
 
 %install
